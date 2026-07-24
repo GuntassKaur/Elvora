@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
 import { ShoppingBag, Menu, X, Search, ArrowUpRight, User } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 
-export default function Navbar() {
+function NavbarContent() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -41,6 +43,25 @@ export default function Navbar() {
 
   const isHomePage = pathname === "/";
   const isTransparent = isHomePage && !scrolled;
+
+  const currentGender = searchParams?.get("gender")?.toLowerCase() || "";
+  const currentCategory = searchParams?.get("category")?.toLowerCase() || "";
+
+  const isLinkActive = (linkHref: string) => {
+    if (pathname !== "/shop") return false;
+    if (linkHref === "/shop") {
+      return !currentGender && !currentCategory;
+    }
+    if (linkHref.includes("gender=")) {
+      const targetGender = linkHref.split("gender=")[1]?.toLowerCase();
+      return currentGender === targetGender;
+    }
+    if (linkHref.includes("category=")) {
+      const targetCategory = linkHref.split("category=")[1]?.toLowerCase();
+      return currentCategory === targetCategory;
+    }
+    return false;
+  };
 
   const navLinks = [
     { label: "Shop", href: "/shop" },
@@ -82,7 +103,7 @@ export default function Navbar() {
 
               <nav className="hidden lg:flex items-center gap-8">
                 {navLinks.map((link) => {
-                  const isActive = pathname === link.href;
+                  const active = isLinkActive(link.href);
                   return (
                     <Link
                       key={link.label}
@@ -92,8 +113,8 @@ export default function Navbar() {
                       }`}
                     >
                       {link.label}
-                      {isActive && (
-                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-current" />
+                      {active && (
+                        <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-current" />
                       )}
                     </Link>
                   );
@@ -190,17 +211,22 @@ export default function Navbar() {
                 </div>
 
                 <nav className="flex flex-col gap-1">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between py-4 border-b border-white/5 text-sm uppercase tracking-[0.2em] font-semibold text-white/80 hover:text-white transition-colors"
-                    >
-                      {link.label}
-                      <ArrowUpRight className="w-4 h-4 opacity-30" />
-                    </Link>
-                  ))}
+                  {navLinks.map((link) => {
+                    const active = isLinkActive(link.href);
+                    return (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center justify-between py-4 border-b border-white/5 text-sm uppercase tracking-[0.2em] font-semibold transition-colors ${
+                          active ? "text-white font-bold" : "text-white/80 hover:text-white"
+                        }`}
+                      >
+                        {link.label}
+                        <ArrowUpRight className="w-4 h-4 opacity-30" />
+                      </Link>
+                    );
+                  })}
                   <div className="pt-6">
                     <Link
                       href={isAuth ? "/profile" : "/login"}
@@ -272,5 +298,13 @@ export default function Navbar() {
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+export default function Navbar() {
+  return (
+    <Suspense fallback={null}>
+      <NavbarContent />
+    </Suspense>
   );
 }

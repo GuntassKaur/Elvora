@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, useMemo } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useProductsStore } from "@/store/useProductsStore";
 import ProductCard from "@/components/ProductCard";
@@ -12,16 +12,15 @@ function ShopContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const activeGender = searchParams.get("gender") || "all";
-  const activeCategory = searchParams.get("category") || "all";
-  const activeSearch = searchParams.get("search") || "";
+  // Read current filter state directly from URL searchParams (single source of truth)
+  const selectedGender = searchParams.get("gender") || "all";
+  const selectedCategory = searchParams.get("category") || "all";
+  const searchQuery = searchParams.get("search") || "";
 
-  const [selectedGender, setSelectedGender] = useState<string>(activeGender);
-  const [selectedCategory, setSelectedCategory] = useState<string>(activeCategory);
+  // Local state for UI controls not tied to global navigation URL
   const [maxPrice, setMaxPrice] = useState<number>(60000);
-  const [searchQuery, setSearchQuery] = useState<string>(activeSearch);
   const [sortBy, setSortBy] = useState<string>("default");
-  
+
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -35,6 +34,40 @@ function ShopContent() {
     { value: "price-desc", label: "Price: High to Low" },
   ];
 
+  const updateUrlParams = (gender: string, category: string, search: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (gender && gender.toLowerCase() !== "all") {
+      params.set("gender", gender.toLowerCase());
+    } else {
+      params.delete("gender");
+    }
+
+    if (category && category.toLowerCase() !== "all") {
+      params.set("category", category);
+    } else {
+      params.delete("category");
+    }
+
+    if (search && search.trim() !== "") {
+      params.set("search", search.trim());
+    } else {
+      params.delete("search");
+    }
+
+    const qs = params.toString();
+    router.push(qs ? `/shop?${qs}` : "/shop", { scroll: false });
+  };
+
+  const handleGenderSelect = (gender: string) => {
+    updateUrlParams(gender, selectedCategory, searchQuery);
+    setActiveDropdown(null);
+  };
+
+  const handleCategorySelect = (category: string) => {
+    updateUrlParams(selectedGender, category, searchQuery);
+    setActiveDropdown(null);
+  };
+
   const formatINR = (amount: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -43,63 +76,120 @@ function ShopContent() {
     }).format(amount);
   };
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesGender = selectedGender === "all" || product.gender === selectedGender || product.gender === "unisex";
-      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-      const matchesPrice = product.price <= maxPrice;
-      const matchesSearch = searchQuery === "" || 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        product.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesGender && matchesCategory && matchesPrice && matchesSearch;
-    });
-  }, [products, selectedGender, selectedCategory, maxPrice, searchQuery]);
+  // Filter products based on URL parameters and price range
+  const filteredProducts = products.filter((product) => {
+    const targetGender = selectedGender.toLowerCase();
+    const matchesGender =
+      targetGender === "all" ||
+      product.gender.toLowerCase() === targetGender ||
+      product.gender.toLowerCase() === "unisex";
 
-  const sortedProducts = useMemo(() => {
-    return [...filteredProducts].sort((a, b) => {
-      if (sortBy === "price-asc") return a.price - b.price;
-      if (sortBy === "price-desc") return b.price - a.price;
-      return 0;
-    });
-  }, [filteredProducts, sortBy]);
+    const targetCategory = selectedCategory.toLowerCase();
+    const matchesCategory =
+      targetCategory === "all" ||
+      product.category.toLowerCase() === targetCategory;
+
+    const matchesPrice = product.price <= maxPrice;
+
+    const matchesSearch =
+      searchQuery === "" ||
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesGender && matchesCategory && matchesPrice && matchesSearch;
+  });
+
+  // Sort products
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === "price-asc") return a.price - b.price;
+    if (sortBy === "price-desc") return b.price - a.price;
+    return 0;
+  });
 
   const clearFilters = () => {
-    setSelectedGender("all");
-    setSelectedCategory("all");
     setMaxPrice(60000);
-    setSearchQuery("");
     setSortBy("default");
     router.push("/shop");
   };
 
-  const hasActiveFilters = selectedGender !== "all" || selectedCategory !== "all" || maxPrice < 60000 || searchQuery !== "" || sortBy !== "default";
+  const hasActiveFilters =
+    selectedGender.toLowerCase() !== "all" ||
+    selectedCategory.toLowerCase() !== "all" ||
+    maxPrice < 60000 ||
+    searchQuery !== "" ||
+    sortBy !== "default";
 
-  // Category Hero Banner Image Selector
-  const categoryHeroImage = useMemo(() => {
-    switch (selectedCategory) {
-      case "Footwear":
-        return "https://images.pexels.com/photos/267320/pexels-photo-267320.jpeg?auto=compress&cs=tinysrgb&w=1920";
-      case "Outerwear":
-        return "https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=1920";
-      case "Tailoring":
-        return "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1920";
-      case "Accessories":
-        return "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1920";
-      case "Knitwear":
-        return "https://images.pexels.com/photos/6764036/pexels-photo-6764036.jpeg?auto=compress&cs=tinysrgb&w=1920";
-      default:
-        return "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920";
+  // Compute Category Hero Banner Info & Image
+  const getHeroInfo = () => {
+    const cat = selectedCategory.toLowerCase();
+    const gen = selectedGender.toLowerCase();
+
+    if (gen === "women" && cat === "all") {
+      return {
+        title: "Women's Collection",
+        tagline: "Architecturally tailored trench coats, fine-knit sweaters, and fluid silk pieces.",
+        image: "https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=1920",
+      };
     }
-  }, [selectedCategory]);
+
+    if (gen === "men" && cat === "all") {
+      return {
+        title: "Men's Collection",
+        tagline: "Double-breasted suit jackets, wide-leg pleated trousers, and essential leather goods.",
+        image: "https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1920",
+      };
+    }
+
+    switch (cat) {
+      case "footwear":
+        return {
+          title: "Footwear Collection",
+          tagline: "Architectural leather boots, suede loafers, and handcrafted leather footwear.",
+          image: "https://images.pexels.com/photos/267320/pexels-photo-267320.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        };
+      case "outerwear":
+        return {
+          title: "Outerwear Collection",
+          tagline: "Water-resistant cotton gabardine trench coats and heavyweight wool cocoon coats.",
+          image: "https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        };
+      case "tailoring":
+        return {
+          title: "Tailoring Collection",
+          tagline: "Precision-cut blazers, wide-leg trousers, and fluid silk tailoring.",
+          image: "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        };
+      case "accessories":
+        return {
+          title: "Accessories Collection",
+          tagline: "Full-grain leather totes, 925 sterling silver jewelry, and wool scarves.",
+          image: "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        };
+      case "knitwear":
+        return {
+          title: "Knitwear Collection",
+          tagline: "Fine-gauge ribbed knits, cashmere turtlenecks, and chunky cardigans.",
+          image: "https://images.pexels.com/photos/6764036/pexels-photo-6764036.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        };
+      default:
+        return {
+          title: "The Catalogue",
+          tagline: "Timeless tailoring, architectural outerwear, and essential luxury wardrobe pieces.",
+          image: "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        };
+    }
+  };
+
+  const heroInfo = getHeroInfo();
 
   return (
     <div className="bg-white min-h-screen font-sans pb-24">
       {/* Category Hero */}
       <div className="relative w-full h-[45vh] sm:h-[55vh] bg-[#0a0a0a] overflow-hidden">
-        <Image 
-          src={categoryHeroImage}
-          alt={`${selectedCategory} Collection`}
+        <Image
+          src={heroInfo.image}
+          alt={heroInfo.title}
           fill
           className="object-cover object-center transition-all duration-700"
           priority
@@ -111,14 +201,10 @@ function ShopContent() {
             ELVORA Catalogue
           </span>
           <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-white tracking-tight leading-none mb-2">
-            {selectedCategory === "all" ? "The Collection" : selectedCategory}
+            {heroInfo.title}
           </h1>
           <p className="text-xs font-serif italic text-white/60 tracking-wider max-w-md">
-            {selectedCategory === "Footwear" 
-              ? "Architectural leather boots, suede loafers, and handcrafted sneakers."
-              : selectedCategory === "Outerwear"
-              ? "Water-resistant cotton gabardine trench coats and heavyweight wool cocoon coats."
-              : "Timeless tailoring and essential luxury wardrobe pieces."}
+            {heroInfo.tagline}
           </p>
         </div>
       </div>
@@ -126,35 +212,35 @@ function ShopContent() {
       {/* Sticky Horizontal Filter Bar */}
       <div className="sticky top-0 z-40 bg-[#faf9f6]/95 backdrop-blur-md border-b border-zinc-200 w-full transition-all">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12 flex justify-between items-center h-16">
-          
+
           {/* Desktop Filters */}
           <div className="hidden lg:flex items-center gap-8 h-full">
-            
+
             {/* Category Dropdown */}
             <div className="relative h-full flex items-center" onMouseLeave={() => setActiveDropdown(null)}>
-              <button 
+              <button
                 onMouseEnter={() => setActiveDropdown("category")}
                 onClick={() => setActiveDropdown(activeDropdown === "category" ? null : "category")}
                 className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-900 h-full px-2"
               >
-                Category {selectedCategory !== "all" && <span className="w-1.5 h-1.5 rounded-full bg-black ml-1" />}
+                Category {selectedCategory.toLowerCase() !== "all" && <span className="w-1.5 h-1.5 rounded-full bg-black ml-1" />}
                 <ChevronDown className="w-3.5 h-3.5 stroke-[1.5]" />
               </button>
               <AnimatePresence>
                 {activeDropdown === "category" && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                     className="absolute top-16 left-0 bg-white border border-zinc-200 shadow-2xl p-6 min-w-[240px] z-50 flex flex-col gap-3"
                   >
                     {categories.map((c) => (
-                      <button 
-                        key={c} onClick={() => { setSelectedCategory(c); setActiveDropdown(null); }}
+                      <button
+                        key={c} onClick={() => handleCategorySelect(c)}
                         className={`text-xs uppercase tracking-[0.15em] text-left transition-colors flex items-center justify-between py-1 ${
-                          selectedCategory === c ? "text-black font-bold" : "text-zinc-500 hover:text-black"
+                          selectedCategory.toLowerCase() === c.toLowerCase() ? "text-black font-bold" : "text-zinc-500 hover:text-black"
                         }`}
                       >
                         {c === "all" ? "All Categories" : c}
-                        {selectedCategory === c && <Check className="w-3.5 h-3.5" />}
+                        {selectedCategory.toLowerCase() === c.toLowerCase() && <Check className="w-3.5 h-3.5" />}
                       </button>
                     ))}
                   </motion.div>
@@ -164,29 +250,29 @@ function ShopContent() {
 
             {/* Gender Dropdown */}
             <div className="relative h-full flex items-center" onMouseLeave={() => setActiveDropdown(null)}>
-              <button 
+              <button
                 onMouseEnter={() => setActiveDropdown("gender")}
                 onClick={() => setActiveDropdown(activeDropdown === "gender" ? null : "gender")}
                 className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-900 h-full px-2"
               >
-                Gender {selectedGender !== "all" && <span className="w-1.5 h-1.5 rounded-full bg-black ml-1" />}
+                Gender {selectedGender.toLowerCase() !== "all" && <span className="w-1.5 h-1.5 rounded-full bg-black ml-1" />}
                 <ChevronDown className="w-3.5 h-3.5 stroke-[1.5]" />
               </button>
               <AnimatePresence>
                 {activeDropdown === "gender" && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                     className="absolute top-16 left-0 bg-white border border-zinc-200 shadow-2xl p-6 min-w-[200px] z-50 flex flex-col gap-3"
                   >
                     {genders.map((g) => (
-                      <button 
-                        key={g} onClick={() => { setSelectedGender(g); setActiveDropdown(null); }}
+                      <button
+                        key={g} onClick={() => handleGenderSelect(g)}
                         className={`text-xs uppercase tracking-[0.15em] text-left transition-colors flex items-center justify-between py-1 ${
-                          selectedGender === g ? "text-black font-bold" : "text-zinc-500 hover:text-black"
+                          selectedGender.toLowerCase() === g.toLowerCase() ? "text-black font-bold" : "text-zinc-500 hover:text-black"
                         }`}
                       >
                         {g === "all" ? "All" : g}
-                        {selectedGender === g && <Check className="w-3.5 h-3.5" />}
+                        {selectedGender.toLowerCase() === g.toLowerCase() && <Check className="w-3.5 h-3.5" />}
                       </button>
                     ))}
                   </motion.div>
@@ -196,7 +282,7 @@ function ShopContent() {
 
             {/* Price Dropdown */}
             <div className="relative h-full flex items-center" onMouseLeave={() => setActiveDropdown(null)}>
-              <button 
+              <button
                 onMouseEnter={() => setActiveDropdown("price")}
                 onClick={() => setActiveDropdown(activeDropdown === "price" ? null : "price")}
                 className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-900 h-full px-2"
@@ -206,7 +292,7 @@ function ShopContent() {
               </button>
               <AnimatePresence>
                 {activeDropdown === "price" && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                     className="absolute top-16 left-0 bg-white border border-zinc-200 shadow-2xl p-8 min-w-[300px] z-50 flex flex-col gap-6"
                   >
@@ -234,7 +320,7 @@ function ShopContent() {
           </div>
 
           {/* Mobile Filter Button */}
-          <button 
+          <button
             onClick={() => setMobileFiltersOpen(true)}
             className="lg:hidden flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-900"
           >
@@ -245,11 +331,13 @@ function ShopContent() {
           {/* Search & Sort */}
           <div className="flex items-center gap-6">
             <div className="hidden sm:flex items-center relative group">
-              <input 
-                type="text" 
-                placeholder="Search..." 
+              <input
+                type="text"
+                placeholder="Search..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  updateUrlParams(selectedGender, selectedCategory, e.target.value);
+                }}
                 className="w-44 border-b border-zinc-300 py-1.5 pl-1 pr-6 text-[10px] uppercase tracking-[0.15em] focus:outline-none focus:border-black transition-colors bg-transparent placeholder:text-zinc-400"
               />
               <Search className="w-3.5 h-3.5 text-zinc-400 absolute right-1 top-2 stroke-[1.5]" />
@@ -288,7 +376,7 @@ function ShopContent() {
 
         <AnimatePresence mode="wait">
           {sortedProducts.length > 0 ? (
-            <motion.div 
+            <motion.div
               layout
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 lg:gap-y-16"
             >
@@ -334,7 +422,7 @@ function ShopContent() {
               <div className="flex justify-center pt-4 pb-2">
                 <div className="w-12 h-1.5 bg-zinc-200 rounded-full" />
               </div>
-              
+
               <div className="flex justify-between items-center px-6 py-4 border-b border-zinc-100">
                 <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-zinc-900">Filters</h2>
                 <button onClick={() => setMobileFiltersOpen(false)} className="p-2 -mr-2">
@@ -348,12 +436,12 @@ function ShopContent() {
                   <h3 className="text-[10px] uppercase tracking-[0.25em] font-bold text-zinc-900 border-b border-zinc-100 pb-2">Category</h3>
                   <div className="flex flex-col gap-3">
                     {categories.map((c) => (
-                      <button 
-                        key={c} onClick={() => setSelectedCategory(c)}
-                        className={`text-xs uppercase tracking-[0.15em] text-left flex justify-between ${selectedCategory === c ? "font-bold text-black" : "text-zinc-500 font-medium"}`}
+                      <button
+                        key={c} onClick={() => handleCategorySelect(c)}
+                        className={`text-xs uppercase tracking-[0.15em] text-left flex justify-between ${selectedCategory.toLowerCase() === c.toLowerCase() ? "font-bold text-black" : "text-zinc-500 font-medium"}`}
                       >
                         {c === "all" ? "All Categories" : c}
-                        {selectedCategory === c && <Check className="w-4 h-4" />}
+                        {selectedCategory.toLowerCase() === c.toLowerCase() && <Check className="w-4 h-4" />}
                       </button>
                     ))}
                   </div>
@@ -364,12 +452,12 @@ function ShopContent() {
                   <h3 className="text-[10px] uppercase tracking-[0.25em] font-bold text-zinc-900 border-b border-zinc-100 pb-2">Gender</h3>
                   <div className="flex flex-col gap-3">
                     {genders.map((g) => (
-                      <button 
-                        key={g} onClick={() => setSelectedGender(g)}
-                        className={`text-xs uppercase tracking-[0.15em] text-left flex justify-between ${selectedGender === g ? "font-bold text-black" : "text-zinc-500 font-medium"}`}
+                      <button
+                        key={g} onClick={() => handleGenderSelect(g)}
+                        className={`text-xs uppercase tracking-[0.15em] text-left flex justify-between ${selectedGender.toLowerCase() === g.toLowerCase() ? "font-bold text-black" : "text-zinc-500 font-medium"}`}
                       >
                         {g === "all" ? "All" : g}
-                        {selectedGender === g && <Check className="w-4 h-4" />}
+                        {selectedGender.toLowerCase() === g.toLowerCase() && <Check className="w-4 h-4" />}
                       </button>
                     ))}
                   </div>
@@ -392,13 +480,13 @@ function ShopContent() {
 
               {/* Bottom Actions */}
               <div className="p-6 border-t border-zinc-100 bg-white grid grid-cols-2 gap-4">
-                <button 
+                <button
                   onClick={clearFilters}
                   className="w-full border border-zinc-300 text-zinc-900 h-14 text-[10px] font-bold uppercase tracking-[0.2em]"
                 >
                   Clear All
                 </button>
-                <button 
+                <button
                   onClick={() => setMobileFiltersOpen(false)}
                   className="w-full bg-black text-white h-14 text-[10px] font-bold uppercase tracking-[0.2em]"
                 >
