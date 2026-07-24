@@ -146,10 +146,10 @@ export default function HomePage() {
             <RevealText className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] font-bold text-white/70">
               Autumn/Winter Collection
             </RevealText>
-            <RevealText className="font-serif text-6xl sm:text-8xl lg:text-[8vw] text-white leading-none tracking-tight" delay={0.1}>
+            <RevealText className="font-serif text-5xl sm:text-7xl lg:text-8xl text-white leading-none tracking-tight" delay={0.1}>
               Wear
             </RevealText>
-            <RevealText className="font-serif text-6xl sm:text-8xl lg:text-[8vw] text-white leading-none tracking-tight font-light italic" delay={0.2}>
+            <RevealText className="font-serif text-5xl sm:text-7xl lg:text-8xl text-white leading-none tracking-tight font-light italic" delay={0.2}>
               Confidence.
             </RevealText>
           </div>
@@ -184,11 +184,11 @@ export default function HomePage() {
       {/* ─────────────────────────────────────────── */}
       <section className="relative py-32 sm:py-48 lg:py-64 overflow-hidden">
         <div className="px-6 sm:px-10 lg:px-16">
-          <RevealText className="font-serif text-[18vw] sm:text-[14vw] leading-none tracking-tighter text-[#0a0a0a] mix-blend-multiply">
+          <RevealText className="font-serif text-6xl sm:text-8xl lg:text-9xl leading-none tracking-tighter text-[#0a0a0a] mix-blend-multiply">
             New
           </RevealText>
           <div className="flex items-end justify-between mt-2">
-            <RevealText className="font-serif text-[18vw] sm:text-[14vw] leading-none tracking-tighter text-[#0a0a0a] italic font-light" delay={0.1}>
+            <RevealText className="font-serif text-6xl sm:text-8xl lg:text-9xl leading-none tracking-tighter text-[#0a0a0a] italic font-light" delay={0.1}>
               Arrivals
             </RevealText>
             <div className="hidden lg:block text-right mb-4">
@@ -278,8 +278,8 @@ export default function HomePage() {
         <RevealText className="text-[9px] uppercase tracking-[0.5em] font-bold text-zinc-400 mb-10">
           Our Philosophy
         </RevealText>
-        <div className="max-w-4xl mx-auto">
-          <RevealText className="font-serif text-3xl sm:text-5xl lg:text-6xl leading-[1.2] font-light text-[#0a0a0a]" delay={0.1}>
+        <div className="max-w-3xl mx-auto">
+          <RevealText className="font-serif text-2xl sm:text-4xl lg:text-5xl leading-[1.3] font-light text-[#0a0a0a]" delay={0.1}>
             &ldquo;We design for those who choose quality over quantity. 
             For those who dress with intention.
             For those who <em>wear confidence.</em>&rdquo;
