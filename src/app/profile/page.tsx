@@ -42,10 +42,9 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const localEmail = typeof window !== "undefined" ? localStorage.getItem("elvora_user") : null;
         const { data: { user } } = await supabase.auth.getUser();
         
-        if (!user && !localEmail) {
+        if (!user) {
           router.replace("/login");
           return;
         }
@@ -69,11 +68,7 @@ export default function ProfilePage() {
               .order("created_at", { ascending: false });
             if (ordersData) setOrders(ordersData);
           }
-        } else if (localEmail) {
-          // Mock User
-          setUser({ email: localEmail, user_metadata: { full_name: "Guest User" } } as any);
         }
-
       } catch (err) {
         console.error("Error fetching profile:", err);
       } finally {
@@ -85,9 +80,6 @@ export default function ProfilePage() {
   }, [router, supabase]);
 
   const handleLogout = async () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("elvora_user");
-    }
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();

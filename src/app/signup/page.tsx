@@ -79,10 +79,6 @@ export default function SignupPage() {
       return;
     }
 
-    // BYPASS: Automatically log in and redirect to homepage.
-    if (typeof window !== "undefined") {
-      localStorage.setItem("elvora_user", normalizedEmail);
-    }
     router.push("/");
     return;
   };

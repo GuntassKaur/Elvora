@@ -65,26 +65,16 @@ export default function LoginPage() {
     if (error) {
       const lower = error.message.toLowerCase();
       if (lower.includes("invalid login credentials") || lower.includes("invalid credentials")) {
-        setAuthError("Incorrect email or password. Please try again.");
+        setAuthError("Account not found. Please create an account.");
       } else if (lower.includes("email not confirmed")) {
-        // BYPASS: User explicitly requested NO email verification for this internship project.
-        // We set a local auth cookie/storage and redirect to home.
-        if (typeof window !== "undefined") {
-          localStorage.setItem("elvora_user", normalizedEmail);
-        }
-        router.push("/");
-      } else if (lower.includes("user not found") || lower.includes("no user found") || lower.includes("invalid login credentials")) {
-        // Actually, Supabase returns "invalid login credentials" if user doesn't exist.
-        // The prompt asked for: "Account not found. Please create an account."
+        setAuthError("Please verify your email address before signing in. Check your inbox for a confirmation link.");
+      } else if (lower.includes("user not found") || lower.includes("no user found")) {
         setAuthError("Account not found. Please create an account.");
       } else {
         setAuthError(mapAuthError(error.message));
       }
       setIsSubmitting(false);
     } else {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("elvora_user", normalizedEmail);
-      }
       router.push("/");
     }
   };
