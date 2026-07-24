@@ -19,7 +19,8 @@ const formatINR = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 
-const FALLBACK_IMAGE = "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=800";
+const FALLBACK_IMAGE =
+  "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=800";
 
 export default function ProductCard({ product, priority = false }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
@@ -27,8 +28,19 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [img0Src, setImg0Src] = useState(product.images[0] || FALLBACK_IMAGE);
-  const [img1Src, setImg1Src] = useState(product.images[1] || FALLBACK_IMAGE);
+
+  // Derive image srcs directly from product prop — no stale useState freeze
+  const primarySrc =
+    product.images && product.images.length > 0 ? product.images[0] : FALLBACK_IMAGE;
+  const hoverSrc =
+    product.images && product.images.length > 1 ? product.images[1] : null;
+
+  // Per-render error fallback state (resets automatically when component remounts via key={product.id})
+  const [img0Error, setImg0Error] = useState(false);
+  const [img1Error, setImg1Error] = useState(false);
+
+  const displaySrc = img0Error ? FALLBACK_IMAGE : primarySrc;
+  const displayHoverSrc = img1Error ? null : hoverSrc;
 
   const isOutOfStock = product.stock === 0;
 
@@ -58,29 +70,38 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     >
       {/* Image Container */}
       <div className="relative aspect-[4/5] overflow-hidden bg-[#F4F3EF] mb-4">
-        <Link href={`/product/${product.id}`} className="absolute inset-0 block" aria-label={`View ${product.name}`}>
+        <Link
+          href={`/product/${product.id}`}
+          className="absolute inset-0 block"
+          aria-label={`View ${product.name}`}
+        >
+          {/* Primary Image */}
           <Image
-            src={img0Src}
+            key={`${product.id}-img0`}
+            src={displaySrc}
             alt={product.name}
             fill
             priority={priority}
-            onError={() => setImg0Src(FALLBACK_IMAGE)}
+            onError={() => setImg0Error(true)}
             className={`object-cover object-top transition-all duration-[1.5s] ease-out ${
-              isHovered ? "scale-[1.03]" : "scale-100"
-            }`}
+              isHovered && displayHoverSrc ? "opacity-0" : "opacity-100 scale-100"
+            } ${isHovered ? "scale-[1.03]" : "scale-100"}`}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
-          {product.images[1] && (
+
+          {/* Hover Image */}
+          {displayHoverSrc && (
             <div
               className={`absolute inset-0 bg-[#F4F3EF] transition-opacity duration-700 ease-in-out ${
                 isHovered ? "opacity-100" : "opacity-0"
               }`}
             >
               <Image
-                src={img1Src}
+                key={`${product.id}-img1`}
+                src={displayHoverSrc}
                 alt={`${product.name} alternate view`}
                 fill
-                onError={() => setImg1Src(FALLBACK_IMAGE)}
+                onError={() => setImg1Error(true)}
                 className="object-cover object-top"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
@@ -148,7 +169,10 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             <span className="text-[9px] uppercase tracking-[0.2em] font-semibold text-zinc-500 mb-1.5">
               {product.category}
             </span>
-            <Link href={`/product/${product.id}`} className="group-hover:opacity-70 transition-opacity">
+            <Link
+              href={`/product/${product.id}`}
+              className="group-hover:opacity-70 transition-opacity"
+            >
               <h3 className="font-serif text-lg text-zinc-900 leading-snug">
                 {product.name}
               </h3>
@@ -170,7 +194,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           <p className="text-xs text-zinc-500 font-light italic truncate max-w-[70%]">
             {product.tagline}
           </p>
-          
+
           {/* Color Swatches */}
           <div className="flex gap-1.5 items-center">
             {product.colors.slice(0, 3).map((color, i) => (

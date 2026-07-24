@@ -153,42 +153,48 @@ export const imageManifest: Record<string, string[]> = {
   ],
 
   // ── FOOTWEAR ─────────────────────────────────────────────
-  // elv-19: Leather Chelsea Boots — dark leather boot photos
+  // elv-19: Leather Chelsea Boots — UNIQUE: dark leather ankle Chelsea boots
+  // Photo IDs used: 267320, 1598508, 1240892, 709861
   "elv-19": [
     "https://images.pexels.com/photos/267320/pexels-photo-267320.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1598508/pexels-photo-1598508.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1240892/pexels-photo-1240892.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/293405/pexels-photo-293405.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/709861/pexels-photo-709861.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
-  // elv-20: Suede Penny Loafer — loafer shoe photos
+  // elv-20: Suede Penny Loafer — UNIQUE: brown suede penny loafers
+  // Photo IDs used: 298863, 1598505, 2529157, 1374910
   "elv-20": [
     "https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/2529157/pexels-photo-2529157.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1374910/pexels-photo-1374910.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
-  // elv-21: Clean Court Leather Sneaker — white leather sneaker photos
+  // elv-21: Clean Court Leather Sneaker — UNIQUE: white court sneakers
+  // Photo IDs used: 2529148, 1478442, 2048548, 1660030
   "elv-21": [
     "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1478442/pexels-photo-1478442.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/2048548/pexels-photo-2048548.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1660030/pexels-photo-1660030.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
-  // elv-22: Cap-Toe Derby Shoe — formal dress shoe photos
+  // elv-22: Cap-Toe Derby Shoe — UNIQUE: formal black dress shoes
+  // Photo IDs used: 3974972, 1386202, 293405, 2220316
   "elv-22": [
-    "https://images.pexels.com/photos/293405/pexels-photo-293405.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/1240892/pexels-photo-1240892.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/3974972/pexels-photo-3974972.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1386202/pexels-photo-1386202.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/267320/pexels-photo-267320.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/293405/pexels-photo-293405.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/2220316/pexels-photo-2220316.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
-  // elv-23: Stretch Knit Ankle Boot — women's ankle boot photos
+  // elv-23: Stretch Knit Ankle Boot — UNIQUE: women's ankle boots
+  // Photo IDs used: 336372, 1308324, 3782786, 3735641
   "elv-23": [
     "https://images.pexels.com/photos/336372/pexels-photo-336372.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1308324/pexels-photo-1308324.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/1456706/pexels-photo-1456706.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/3735641/pexels-photo-3735641.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
-  // elv-24: Double-Strap Leather Slides — sandal / slide photos
+  // elv-24: Double-Strap Leather Slides — UNIQUE: flat leather slide sandals
+  // Photo IDs used: 1456706, 1131777, 1546003, 2090881
   "elv-24": [
     "https://images.pexels.com/photos/1456706/pexels-photo-1456706.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1131777/pexels-photo-1131777.jpeg?auto=compress&cs=tinysrgb&w=1200",
