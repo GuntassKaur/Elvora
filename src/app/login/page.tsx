@@ -57,7 +57,7 @@ export default function LoginPage() {
 
     const normalizedEmail = data.email.trim().toLowerCase();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
       email: normalizedEmail,
       password: data.password,
     });
@@ -67,18 +67,18 @@ export default function LoginPage() {
       setIsSubmitting(false);
     } else {
       // Create missing customer record if it doesn't exist
-      if (data?.user) {
+      if (authData?.user) {
         const { data: existingCustomer } = await supabase
           .from("customers")
           .select("id")
-          .eq("auth_id", data.user.id)
+          .eq("auth_id", authData.user.id)
           .maybeSingle();
 
         if (!existingCustomer) {
           await supabase.from("customers").insert({
-            auth_id: data.user.id,
+            auth_id: authData.user.id,
             email: normalizedEmail,
-            full_name: data.user.user_metadata?.full_name || "Guest",
+            full_name: authData.user.user_metadata?.full_name || "Guest",
           });
         }
       }
