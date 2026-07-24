@@ -1,4 +1,5 @@
-import { Product, Color } from "@/data/products";
+import { Product, Color, products as localProducts } from "@/data/products";
+import { getProductImages } from "@/data/imageManifest";
 
 // Database row definition for Products Table
 export interface ProductRow {
@@ -80,43 +81,39 @@ export interface OrderRow {
 }
 
 /**
- * Convert a Supabase ProductRow into the frontend Product interface
+ * Convert a Supabase ProductRow into the frontend Product interface,
+ * guaranteeing 100% category, gender, title, and image alignment.
  */
 export function mapRowToProduct(row: ProductRow): Product {
+  const localMatch = localProducts.find((p) => p.id === row.id || p.slug === row.slug);
+  const manifestImages = getProductImages(row.id || row.slug);
+
   return {
     id: row.id || row.slug,
     slug: row.slug,
-    name: row.name,
-    tagline: row.tagline || row.name,
-    category: row.category as Product["category"],
-    gender: (row.gender as Product["gender"]) || "unisex",
+    name: localMatch?.name || row.name,
+    tagline: row.tagline || localMatch?.tagline || row.name,
+    category: (localMatch?.category || row.category) as Product["category"],
+    gender: (localMatch?.gender || row.gender) as Product["gender"] || "unisex",
     brand: row.brand || "ELVORA",
-    description: row.description,
-    shortDescription: row.short_description || row.description,
-    fullDescription: row.full_description || row.description,
-    price: Number(row.price),
-    originalPrice: Number(row.original_price || row.price),
-    discountPercentage: Number(row.discount_percentage ?? 0),
-    rating: Number(row.rating ?? 4.8),
-    reviewCount: row.review_count ?? 12,
-    stock: row.stock ?? 50,
-    isFeatured: Boolean(row.featured),
-    isNewArrival: Boolean(row.new_arrival),
-    isTrending: Boolean(row.trending),
-    colors: Array.isArray(row.colors) ? row.colors : [],
-    sizes: Array.isArray(row.sizes) ? row.sizes : [],
-    materials: Array.isArray(row.materials) ? row.materials : ["100% Organic Fabric"],
-    images: Array.isArray(row.images) ? row.images : [],
-    details: Array.isArray(row.details)
-      ? row.details
-      : [
-          "100% Premium Sustainable Fabric",
-          "Tailored Fit & Superior Craftsmanship",
-          "Designed for Comfort and Elegance",
-        ],
-    careInstructions: Array.isArray(row.care_instructions)
-      ? row.care_instructions
-      : ["Dry clean only", "Do not tumble dry"],
-    tags: Array.isArray(row.tags) ? row.tags : [row.category],
+    description: row.description || localMatch?.description || "",
+    shortDescription: row.short_description || localMatch?.shortDescription || row.description,
+    fullDescription: row.full_description || localMatch?.fullDescription || row.description,
+    price: Number(row.price || localMatch?.price || 0),
+    originalPrice: Number(row.original_price || localMatch?.originalPrice || row.price),
+    discountPercentage: Number(row.discount_percentage ?? localMatch?.discountPercentage ?? 0),
+    rating: Number(row.rating ?? localMatch?.rating ?? 4.8),
+    reviewCount: row.review_count ?? localMatch?.reviewCount ?? 12,
+    stock: row.stock ?? localMatch?.stock ?? 50,
+    isFeatured: Boolean(row.featured ?? localMatch?.isFeatured),
+    isNewArrival: Boolean(row.new_arrival ?? localMatch?.isNewArrival),
+    isTrending: Boolean(row.trending ?? localMatch?.isTrending),
+    colors: Array.isArray(row.colors) && row.colors.length > 0 ? row.colors : (localMatch?.colors || []),
+    sizes: Array.isArray(row.sizes) && row.sizes.length > 0 ? row.sizes : (localMatch?.sizes || []),
+    materials: Array.isArray(row.materials) ? row.materials : (localMatch?.materials || ["100% Organic Fabric"]),
+    images: manifestImages && manifestImages.length > 0 ? manifestImages : (Array.isArray(row.images) ? row.images : []),
+    details: Array.isArray(row.details) ? row.details : (localMatch?.details || []),
+    careInstructions: Array.isArray(row.care_instructions) ? row.care_instructions : (localMatch?.careInstructions || []),
+    tags: Array.isArray(row.tags) ? row.tags : (localMatch?.tags || [row.category]),
   };
 }
