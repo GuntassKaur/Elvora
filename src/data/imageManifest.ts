@@ -26,29 +26,32 @@ export const imageManifest: Record<string, string[]> = {
   "elv-10": ["/images/catalog/elv_10_mens_utility_jacket.jpg"],
   "elv-12": ["/images/catalog/elv_12_mens_denim_jacket.jpg"],
 
-  // ── ACCESSORIES (Real Unsplash Product Photography) ────────
-  "elv-13": ["https://images.unsplash.com/photo-1520699049698-b2fa6c519447?auto=format&fit=crop&w=1200&q=80"], // Scarf
-  "elv-14": ["https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=80"], // Tote Bag
-  "elv-15": ["https://images.unsplash.com/photo-1599643478524-41bec2962a69?auto=format&fit=crop&w=1200&q=80"], // Silver Chain
-  "elv-16": ["https://images.unsplash.com/photo-1521369909029-2afed882ba54?auto=format&fit=crop&w=1200&q=80"], // Fedora
-  "elv-17": ["https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=1200&q=80"], // Beanie
-  "elv-18": ["https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=1200&q=80"], // Belt
+  // ── MEN'S KNITWEAR ───────────────────────────────────────
+  "elv-11": ["/images/catalog/elv_11_mens_polo.jpg"],
 
-  // ── FOOTWEAR (Real Unsplash Product Photography) ───────────
-  "elv-19": ["https://images.unsplash.com/photo-1603483980313-176c7c64c740?auto=format&fit=crop&w=1200&q=80"], // Chelsea Boots
-  "elv-20": ["https://images.unsplash.com/photo-1534260933201-acfaee3017ee?auto=format&fit=crop&w=1200&q=80"], // Loafer
-  "elv-21": ["https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1200&q=80"], // Sneaker
-  "elv-22": ["https://images.unsplash.com/photo-1614252369475-531eba835eb1?auto=format&fit=crop&w=1200&q=80"], // Derby
-  "elv-23": ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=1200&q=80"], // Ankle Boot
-  "elv-24": ["https://images.unsplash.com/photo-1562183241-b937e95585b6?auto=format&fit=crop&w=1200&q=80"], // Sandals
+  // ── ACCESSORIES (Real product photography) ────────
+  "elv-13": ["https://upload.wikimedia.org/wikipedia/commons/9/90/100%25_Kaschmir_Wolle_vonk_kaschmirprodukte.de.jpg"], // Scarf
+  "elv-14": ["https://upload.wikimedia.org/wikipedia/commons/8/89/Totebag.jpg"], // Tote Bag
+  "elv-15": ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Silver_chain_%283%29.jpg/800px-Silver_chain_%283%29.jpg"], // Silver Chain
+  "elv-16": ["https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/A_fedora_hat%2C_made_by_Borsalino.jpg/1280px-A_fedora_hat%2C_made_by_Borsalino.jpg"], // Fedora
+  "elv-17": ["https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Touque-white.jpg/800px-Touque-white.jpg"], // Beanie
+  "elv-18": ["https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Germany_Belt-and-Buckle-02.jpg/960px-Germany_Belt-and-Buckle-02.jpg"], // Belt
+
+  // ── FOOTWEAR (Real product photography) ───────────
+  "elv-19": ["https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Chelsea_boot%2C_black.jpg/960px-Chelsea_boot%2C_black.jpg"], // Chelsea Boots
+  "elv-20": ["https://upload.wikimedia.org/wikipedia/commons/1/17/Loafers_being_worn.jpg"], // Loafer
+  "elv-21": ["https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Sneakers.jpg/800px-Sneakers.jpg"], // Sneaker
+  "elv-22": ["https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/A_pair_of_derby_shoes.jpg/800px-A_pair_of_derby_shoes.jpg"], // Derby
+  "elv-23": ["https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Ankle_boots.jpg/800px-Ankle_boots.jpg"], // Ankle Boot
+  "elv-24": ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Sandals.jpg/800px-Sandals.jpg"], // Sandals
 
   // ── HERO & EDITORIAL ─────────────────────────────────────
-  "hero-1": ["https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920"],
-  "hero-footwear": ["https://images.pexels.com/photos/267320/pexels-photo-267320.jpeg?auto=compress&cs=tinysrgb&w=1920"],
+  "hero-1": ["https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1920&q=80"],
+  "hero-footwear": ["https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1920&q=80"],
 };
 
 export function getProductImages(productId: string): string[] {
   return imageManifest[productId] || [
-    "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=80",
   ];
 }

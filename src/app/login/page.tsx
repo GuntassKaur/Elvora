@@ -64,15 +64,7 @@ export default function LoginPage() {
 
     if (error) {
       const lower = error.message.toLowerCase();
-      if (lower.includes("invalid login credentials") || lower.includes("invalid credentials")) {
-        setAuthError("Account not found. Please create an account.");
-      } else if (lower.includes("email not confirmed")) {
-        setAuthError("Please verify your email address before signing in. Check your inbox for a confirmation link.");
-      } else if (lower.includes("user not found") || lower.includes("no user found")) {
-        setAuthError("Account not found. Please create an account.");
-      } else {
-        setAuthError(mapAuthError(error.message));
-      }
+      setAuthError("Account not found. Please create an account.");
       setIsSubmitting(false);
     } else {
       router.push("/");
@@ -84,7 +76,7 @@ export default function LoginPage() {
       {/* Left: Editorial Image */}
       <div className="hidden lg:block relative overflow-hidden">
         <Image
-          src="https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1200"
+          src="https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=80"
           alt="ELVORA Login"
           fill
           priority

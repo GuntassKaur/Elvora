@@ -20,7 +20,7 @@ const formatINR = (amount: number) =>
   }).format(amount);
 
 const FALLBACK_IMAGE =
-  "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=800";
+  "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=800&q=80";
 
 export default function ProductCard({ product, priority = false }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
