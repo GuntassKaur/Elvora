@@ -25,7 +25,7 @@ function mapAuthError(message: string): string {
     return "Incorrect email or password. Please try again.";
   }
   if (lower.includes("email not confirmed")) {
-    return "Please verify your email address before signing in. Check your inbox for a confirmation link.";
+    return "Your account requires legacy verification. Please create a new account with a different email for this demo.";
   }
   if (lower.includes("user not found") || lower.includes("no user found")) {
     return "No account found with this email. Please sign up first.";
@@ -63,7 +63,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setAuthError("Account not found. Please create an account.");
+      setAuthError(mapAuthError(error.message));
       setIsSubmitting(false);
     } else {
       // Create missing customer record if it doesn't exist
