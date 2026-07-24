@@ -153,7 +153,7 @@ export default function CheckoutPage() {
           .from("customers")
           .select("*")
           .eq("auth_id", session.user.id)
-          .single();
+          .maybeSingle();
           
         if (customer) {
           setValue("fullName", customer.full_name);

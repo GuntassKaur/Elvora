@@ -63,10 +63,25 @@ export default function LoginPage() {
     });
 
     if (error) {
-      const lower = error.message.toLowerCase();
       setAuthError("Account not found. Please create an account.");
       setIsSubmitting(false);
     } else {
+      // Create missing customer record if it doesn't exist
+      if (data?.user) {
+        const { data: existingCustomer } = await supabase
+          .from("customers")
+          .select("id")
+          .eq("auth_id", data.user.id)
+          .maybeSingle();
+
+        if (!existingCustomer) {
+          await supabase.from("customers").insert({
+            auth_id: data.user.id,
+            email: normalizedEmail,
+            full_name: data.user.user_metadata?.full_name || "Guest",
+          });
+        }
+      }
       router.push("/");
     }
   };

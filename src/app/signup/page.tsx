@@ -79,6 +79,18 @@ export default function SignupPage() {
       return;
     }
 
+    // Automatically create the customer profile record
+    if (signupData?.user) {
+      const { error: customerError } = await supabase.from("customers").insert({
+        auth_id: signupData.user.id,
+        email: normalizedEmail,
+        full_name: data.fullName.trim(),
+      });
+      if (customerError) {
+        console.warn("Could not create customer profile:", customerError.message);
+      }
+    }
+
     router.push("/");
     return;
   };

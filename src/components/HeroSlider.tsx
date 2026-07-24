@@ -18,7 +18,7 @@ interface Slide {
 const slides: Slide[] = [
   {
     title: "The Signature Collection",
-    subtitle: "New Season — 2025",
+    subtitle: "New Season — 2026",
     desc: "Uncompromising elegance for the modern visionary.",
     image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000",
     link: "/shop",

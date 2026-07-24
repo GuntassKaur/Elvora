@@ -56,7 +56,7 @@ export default function ProfilePage() {
             .from("customers")
             .select("*")
             .eq("auth_id", user.id)
-            .single();
+            .maybeSingle();
           
           if (customerData) {
             setCustomer(customerData);

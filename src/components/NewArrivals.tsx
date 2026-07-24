@@ -26,7 +26,7 @@ export default function NewArrivals() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
               <span className="text-[10px] tracking-[0.3em] text-zinc-500 uppercase font-semibold block mb-6">
-                Fresh Drop &bull; Season 2025
+                Fresh Drop &bull; Season 2026
               </span>
               <h2 className="font-serif text-5xl sm:text-7xl font-normal text-zinc-900 tracking-tight leading-[0.9] mb-8">
                 New <br />

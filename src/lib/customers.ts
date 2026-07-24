@@ -16,7 +16,7 @@ export async function getCustomerByAuthId(authId: string): Promise<CustomerRow |
       .from("customers")
       .select("*")
       .eq("auth_id", authId)
-      .single();
+      .maybeSingle();
     return data;
   } catch {
     return null;
@@ -50,7 +50,7 @@ export async function createCustomer(payload: CustomerPayload): Promise<string |
         auth_id: payload.authId || null,
       })
       .select("id")
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.warn("Could not insert customer into Supabase:", error.message);

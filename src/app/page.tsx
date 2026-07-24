@@ -41,7 +41,7 @@ function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-white/80 text-[10px] sm:text-xs uppercase tracking-[0.3em] font-medium mb-6"
         >
-          Autumn / Winter 2025
+          Autumn / Winter 2026
         </motion.span>
         
         <motion.h1
