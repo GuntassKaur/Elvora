@@ -18,27 +18,7 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-// Map Supabase error messages to user-friendly equivalents
-function mapAuthError(message: string): string {
-  const lower = message.toLowerCase();
-  if (lower.includes("invalid login credentials") || lower.includes("invalid credentials")) {
-    return "Incorrect email or password. Please try again.";
-  }
-  if (lower.includes("email not confirmed")) {
-    return "Your account requires legacy verification. Please create a new account with a different email for this demo.";
-  }
-  if (lower.includes("user not found") || lower.includes("no user found")) {
-    return "No account found with this email. Please sign up first.";
-  }
-  if (lower.includes("rate limit") || lower.includes("too many")) {
-    return "Too many login attempts. Please wait a moment and try again.";
-  }
-  if (lower.includes("network") || lower.includes("fetch")) {
-    return "Network error. Please check your connection and try again.";
-  }
-  // Show the real Supabase error for all other cases
-  return message;
-}
+// Use raw Supabase errors as the source of truth
 
 export default function LoginPage() {
   const router = useRouter();
@@ -63,7 +43,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setAuthError(mapAuthError(error.message));
+      setAuthError(error.message);
       setIsSubmitting(false);
     } else {
       // Create missing customer record if it doesn't exist

@@ -18,27 +18,7 @@ const signupSchema = z.object({
 
 type SignupFormData = z.infer<typeof signupSchema>;
 
-// Map Supabase error messages to user-friendly equivalents
-function mapAuthError(message: string): string {
-  const lower = message.toLowerCase();
-  if (lower.includes("user already registered") || lower.includes("already been registered")) {
-    return "An account with this email already exists. Please sign in instead.";
-  }
-  if (lower.includes("invalid email")) {
-    return "Please enter a valid email address.";
-  }
-  if (lower.includes("password")) {
-    return "Password must be at least 6 characters.";
-  }
-  if (lower.includes("rate limit") || lower.includes("too many")) {
-    return "Too many attempts. Please wait a moment and try again.";
-  }
-  if (lower.includes("network") || lower.includes("fetch")) {
-    return "Network error. Please check your connection and try again.";
-  }
-  // Return the real Supabase error message as-is for all other cases
-  return message;
-}
+// Use raw Supabase errors as the source of truth
 
 export default function SignupPage() {
   const router = useRouter();
@@ -74,7 +54,7 @@ export default function SignupPage() {
     });
 
     if (error) {
-      setAuthError(mapAuthError(error.message));
+      setAuthError(error.message);
       setIsSubmitting(false);
       return;
     }
