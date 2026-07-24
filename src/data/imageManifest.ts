@@ -30,20 +30,20 @@ export const imageManifest: Record<string, string[]> = {
   "elv-11": ["/images/catalog/elv_11_mens_polo.jpg"],
 
   // ── ACCESSORIES ──────────────────────────────────────────
-  "elv-14": ["https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-13": ["https://images.pexels.com/photos/6764787/pexels-photo-6764787.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-15": ["https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-16": ["https://images.pexels.com/photos/352586/pexels-photo-352586.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-17": ["https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-18": ["https://images.pexels.com/photos/45055/pexels-photo-45055.jpeg?auto=compress&cs=tinysrgb&w=1200"],
+  "elv-14": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Structured\nLeather\nTote&font=playfair-display"],
+  "elv-13": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Wool\nBlend\nScarf&font=playfair-display"],
+  "elv-15": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Sterling\nSilver\nChain&font=playfair-display"],
+  "elv-16": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Wool\nFelt\nFedora&font=playfair-display"],
+  "elv-17": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Ribbed\nKnit\nBeanie&font=playfair-display"],
+  "elv-18": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Full-Grain\nLeather\nBelt&font=playfair-display"],
 
   // ── FOOTWEAR ─────────────────────────────────────────────
-  "elv-19": ["https://images.pexels.com/photos/267320/pexels-photo-267320.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-20": ["https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-21": ["https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-22": ["https://images.pexels.com/photos/3974972/pexels-photo-3974972.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-23": ["https://images.pexels.com/photos/336372/pexels-photo-336372.jpeg?auto=compress&cs=tinysrgb&w=1200"],
-  "elv-24": ["https://images.pexels.com/photos/1456706/pexels-photo-1456706.jpeg?auto=compress&cs=tinysrgb&w=1200"],
+  "elv-19": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Leather\nChelsea\nBoots&font=playfair-display"],
+  "elv-20": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Suede\nPenny\nLoafer&font=playfair-display"],
+  "elv-21": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Clean\nCourt\nSneaker&font=playfair-display"],
+  "elv-22": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Cap-Toe\nDerby\nShoe&font=playfair-display"],
+  "elv-23": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Zip-Up\nAnkle\nBoot&font=playfair-display"],
+  "elv-24": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Leather\nSlide\nSandals&font=playfair-display"],
 
   // ── HERO & EDITORIAL ─────────────────────────────────────
   "hero-1": ["https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920"],

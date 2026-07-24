@@ -31,12 +31,23 @@ function NavbarContent() {
 
   useEffect(() => {
     const checkAuth = async () => {
+      if (typeof window !== "undefined") {
+        const localUser = localStorage.getItem("elvora_user");
+        if (localUser) {
+          setIsAuth(true);
+          return;
+        }
+      }
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuth(!!session);
     };
     checkAuth();
     const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
-      setIsAuth(!!session);
+      if (typeof window !== "undefined" && localStorage.getItem("elvora_user")) {
+        setIsAuth(true);
+      } else {
+        setIsAuth(!!session);
+      }
     });
     return () => authListener.subscription.unsubscribe();
   }, [supabase.auth]);

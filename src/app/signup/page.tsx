@@ -79,39 +79,12 @@ export default function SignupPage() {
       return;
     }
 
-    // Supabase silently succeeds for already-registered emails when email
-    // confirmations are disabled — detect this by checking identities array
-    if (
-      signupData.user &&
-      signupData.user.identities &&
-      signupData.user.identities.length === 0
-    ) {
-      setAuthError(
-        "An account with this email already exists. Please sign in instead."
-      );
-      setIsSubmitting(false);
-      return;
+    // BYPASS: Automatically log in and redirect to homepage.
+    if (typeof window !== "undefined") {
+      localStorage.setItem("elvora_user", normalizedEmail);
     }
-
-    // If email confirmation is required, Supabase returns a user but no session
-    if (signupData.user && !signupData.session) {
-      setSuccessMessage(
-        "Account created! Please check your email and click the confirmation link to activate your account."
-      );
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Successful signup with immediate session (email confirmation disabled)
-    if (signupData.session) {
-      router.push("/profile");
-      router.refresh();
-      return;
-    }
-
-    // Fallback
-    setAuthError("Something went wrong. Please try again.");
-    setIsSubmitting(false);
+    router.push("/");
+    return;
   };
 
   return (

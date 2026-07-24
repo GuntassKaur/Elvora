@@ -42,35 +42,38 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
+        const localEmail = typeof window !== "undefined" ? localStorage.getItem("elvora_user") : null;
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
+        
+        if (!user && !localEmail) {
           router.replace("/login");
           return;
         }
-        setUser(user);
 
-        // Fetch customer record linked to auth user
-        const { data: customerData } = await supabase
-          .from("customers")
-          .select("*")
-          .eq("auth_id", user.id)
-          .single();
-        
-        if (customerData) {
-          setCustomer(customerData);
-          setEditName(customerData.full_name);
-        }
-
-        // Fetch orders using the customer ID
-        if (customerData) {
-          const { data: ordersData } = await supabase
-            .from("orders")
+        if (user) {
+          setUser(user);
+          // Fetch customer record linked to auth user
+          const { data: customerData } = await supabase
+            .from("customers")
             .select("*")
-            .eq("customer_id", customerData.id)
-            .order("created_at", { ascending: false });
+            .eq("auth_id", user.id)
+            .single();
           
-          if (ordersData) setOrders(ordersData);
+          if (customerData) {
+            setCustomer(customerData);
+            setEditName(customerData.full_name);
+            const { data: ordersData } = await supabase
+              .from("orders")
+              .select("*")
+              .eq("customer_id", customerData.id)
+              .order("created_at", { ascending: false });
+            if (ordersData) setOrders(ordersData);
+          }
+        } else if (localEmail) {
+          // Mock User
+          setUser({ email: localEmail, user_metadata: { full_name: "Guest User" } } as any);
         }
+
       } catch (err) {
         console.error("Error fetching profile:", err);
       } finally {
@@ -82,6 +85,9 @@ export default function ProfilePage() {
   }, [router, supabase]);
 
   const handleLogout = async () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("elvora_user");
+    }
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();
