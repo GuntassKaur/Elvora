@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter, usePathname } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { Color } from "@/data/products";
 import { useProductsStore } from "@/store/useProductsStore";
 import { useCartStore } from "@/store/useCartStore";
-import { Plus, Minus, ArrowRight, Truck, RefreshCcw, ChevronDown, ChevronUp } from "lucide-react";
+import { useWishlistStore } from "@/store/useWishlistStore";
+import { Plus, Minus, ArrowRight, Truck, RefreshCcw, ChevronDown, ChevronUp, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 
@@ -44,6 +46,20 @@ export default function ProductDetailsPage({ params }: Props) {
   const { id } = React.use(params);
   const products = useProductsStore((state) => state.products);
   const addToCart = useCartStore((state) => state.addToCart);
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
+  
+  const router = useRouter();
+  const pathname = usePathname();
+  const supabase = createClient();
+  const [isAuth, setIsAuth] = useState(false);
+
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuth(!!session);
+    };
+    checkAuth();
+  }, [supabase]);
 
   const product = products.find((p) => p.id === id);
   if (!product) {
@@ -65,7 +81,34 @@ export default function ProductDetailsPage({ params }: Props) {
   };
 
   const handleAddToBag = () => {
+    if (!isAuth) {
+      localStorage.setItem("elvora-pending-action", JSON.stringify({
+        action: "ADD_TO_CART",
+        product,
+        quantity,
+        size: selectedSize,
+        color: selectedColor
+      }));
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
     addToCart(product, quantity, selectedSize, selectedColor);
+  };
+
+  const handleToggleWishlist = () => {
+    if (!isAuth) {
+      localStorage.setItem("elvora-pending-action", JSON.stringify({
+        action: "ADD_TO_WISHLIST",
+        product
+      }));
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
   };
 
   // Recommendations
@@ -248,6 +291,13 @@ export default function ProductDetailsPage({ params }: Props) {
                   >
                     Add To Bag
                     <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleToggleWishlist}
+                    aria-label="Toggle wishlist"
+                    className="w-14 h-14 border border-zinc-300 flex items-center justify-center text-zinc-900 hover:border-black transition-colors"
+                  >
+                    <Heart className={`w-5 h-5 stroke-[1.25] ${isInWishlist(product.id) ? "fill-black text-black" : ""}`} />
                   </button>
                 </div>
               </div>

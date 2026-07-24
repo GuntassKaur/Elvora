@@ -9,6 +9,8 @@ import * as z from "zod";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useCartStore } from "@/store/useCartStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 
 const signupSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters."),
@@ -71,7 +73,24 @@ export default function SignupPage() {
       }
     }
 
-    router.push("/");
+    const pendingActionData = localStorage.getItem("elvora-pending-action");
+    if (pendingActionData) {
+      try {
+        const parsed = JSON.parse(pendingActionData);
+        if (parsed.action === "ADD_TO_CART") {
+          useCartStore.getState().addToCart(parsed.product, parsed.quantity, parsed.size, parsed.color);
+        } else if (parsed.action === "ADD_TO_WISHLIST") {
+          useWishlistStore.getState().addToWishlist(parsed.product);
+        }
+        localStorage.removeItem("elvora-pending-action");
+      } catch {
+        // ignore parsing error
+      }
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const redirectUrl = params.get("redirect");
+    router.push(redirectUrl ? redirectUrl : "/");
     return;
   };
 
@@ -207,7 +226,7 @@ export default function SignupPage() {
           <div className="mt-6 pt-6 border-t border-zinc-100 text-center">
             <p className="text-xs text-zinc-500">
               Already have an account?{" "}
-              <Link href="/login" className="font-semibold text-zinc-900 underline underline-offset-2 hover:text-zinc-600 transition-colors">
+              <Link href={`/login${typeof window !== "undefined" && window.location.search ? window.location.search : ""}`} className="font-semibold text-zinc-900 underline underline-offset-2 hover:text-zinc-600 transition-colors">
                 Sign In
               </Link>
             </p>

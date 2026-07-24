@@ -4,7 +4,8 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
-import { ShoppingBag, Menu, X, Search, ArrowUpRight, User } from "lucide-react";
+import { useWishlistStore } from "@/store/useWishlistStore";
+import { ShoppingBag, Menu, X, Search, ArrowUpRight, User, Heart } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 
@@ -22,6 +23,9 @@ function NavbarContent() {
   const cart = useCartStore((state) => state.cart);
   const setCartOpen = useCartStore((state) => state.setCartOpen);
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  const wishlistItems = useWishlistStore((state) => state.items);
+  const wishlistCount = wishlistItems.length;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -155,6 +159,19 @@ function NavbarContent() {
                 <User className="w-[17px] h-[17px] stroke-[1.25]" />
               </Link>
 
+              <Link
+                href="/wishlist"
+                className="p-2 hover:opacity-50 transition-opacity relative hidden sm:block"
+                aria-label="Wishlist"
+              >
+                <Heart className="w-[17px] h-[17px] stroke-[1.25]" />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-1.5 right-1 w-3.5 h-3.5 bg-[#0a0a0a] text-[#faf9f6] text-[8px] font-bold rounded-full flex items-center justify-center border-2 border-[#faf9f6]">
+                    {wishlistCount > 9 ? "9+" : wishlistCount}
+                  </span>
+                )}
+              </Link>
+
               <button
                 onClick={() => setCartOpen(true)}
                 className="p-2 flex items-center gap-2 hover:opacity-50 transition-opacity"
@@ -227,7 +244,15 @@ function NavbarContent() {
                       </Link>
                     );
                   })}
-                  <div className="pt-6">
+                  <div className="pt-6 space-y-2">
+                    <Link
+                      href="/wishlist"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 py-4 text-sm uppercase tracking-[0.2em] font-semibold text-white/60 hover:text-white transition-colors border-b border-white/5"
+                    >
+                      <Heart className="w-4 h-4" />
+                      Wishlist ({wishlistCount})
+                    </Link>
                     <Link
                       href={isAuth ? "/profile" : "/login"}
                       onClick={() => setMobileMenuOpen(false)}

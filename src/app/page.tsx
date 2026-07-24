@@ -214,8 +214,8 @@ function PhilosophySection() {
           transition={{ duration: 1 }}
           className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-tight font-light"
         >
-          "Elegance is not about being noticed, <br className="hidden sm:block" />
-          it is about being <span className="italic">remembered</span>."
+          &quot;Elegance is not about being noticed, <br className="hidden sm:block" />
+          it is about being <span className="italic">remembered</span>.&quot;
         </motion.p>
         <div className="w-12 h-[1px] bg-white/30 mt-12 mb-12" />
         <Link

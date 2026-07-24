@@ -145,6 +145,11 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push("/login?redirect=/checkout");
+        return;
+      }
+
       if (session?.user) {
         setAuthId(session.user.id);
         
@@ -167,7 +172,7 @@ export default function CheckoutPage() {
       }
     };
     fetchUser();
-  }, [supabase, setValue]);
+  }, [supabase, setValue, router]);
 
   // Processing animation stages
   useEffect(() => {

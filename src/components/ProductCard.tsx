@@ -5,7 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/data/products";
 import { useCartStore } from "@/store/useCartStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { Heart, Plus } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 interface ProductCardProps {
   product: Product;
@@ -24,10 +27,14 @@ const FALLBACK_IMAGE =
 
 export default function ProductCard({ product, priority = false }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
   const addToast = useCartStore((state) => state.addToast);
 
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const supabase = createClient();
+  const isWishlisted = isInWishlist(product.id);
 
   // Derive image srcs directly from product prop — no stale useState freeze
   const primarySrc =
@@ -44,22 +51,51 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   const isOutOfStock = product.stock === 0;
 
-  const handleWishlistToggle = (e: React.MouseEvent) => {
+  const handleWishlistToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted((w) => !w);
-    addToast(
-      isWishlisted ? `Removed from wishlist` : `Saved to wishlist`,
-      isWishlisted ? "info" : "success"
-    );
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      localStorage.setItem("elvora-pending-action", JSON.stringify({
+        action: "ADD_TO_WISHLIST",
+        product
+      }));
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    if (isWishlisted) {
+      removeFromWishlist(product.id);
+      addToast("Removed from wishlist", "info");
+    } else {
+      addToWishlist(product);
+      addToast("Saved to wishlist", "success");
+    }
   };
 
-  const handleQuickAdd = (e: React.MouseEvent) => {
+  const handleQuickAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (isOutOfStock) return;
+    
     const size = product.sizes[0] || "One Size";
-    addToCart(product, 1, size, product.colors[0]);
+    const color = product.colors[0];
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      localStorage.setItem("elvora-pending-action", JSON.stringify({
+        action: "ADD_TO_CART",
+        product,
+        quantity: 1,
+        size,
+        color
+      }));
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    addToCart(product, 1, size, color);
   };
 
   return (
@@ -139,7 +175,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         >
           <Heart
             className={`w-4 h-4 transition-all ${
-              isWishlisted ? "fill-red-500 text-red-500" : "stroke-[1.5]"
+              isWishlisted ? "fill-black text-black" : "stroke-[1.5] text-zinc-500 hover:text-black"
             }`}
           />
         </button>

@@ -10,6 +10,8 @@ import * as z from "zod";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useCartStore } from "@/store/useCartStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -62,7 +64,25 @@ export default function LoginPage() {
           });
         }
       }
-      router.push("/");
+      
+      const pendingActionData = localStorage.getItem("elvora-pending-action");
+      if (pendingActionData) {
+        try {
+          const parsed = JSON.parse(pendingActionData);
+          if (parsed.action === "ADD_TO_CART") {
+            useCartStore.getState().addToCart(parsed.product, parsed.quantity, parsed.size, parsed.color);
+          } else if (parsed.action === "ADD_TO_WISHLIST") {
+            useWishlistStore.getState().addToWishlist(parsed.product);
+          }
+          localStorage.removeItem("elvora-pending-action");
+        } catch {
+          // ignore parsing error
+        }
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get("redirect");
+      router.push(redirectUrl ? redirectUrl : "/");
     }
   };
 
@@ -196,7 +216,7 @@ export default function LoginPage() {
 
           {/* Sign Up Link */}
           <Link
-            href="/signup"
+            href={`/signup${typeof window !== "undefined" && window.location.search ? window.location.search : ""}`}
             className="w-full border border-zinc-300 py-4 flex justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#0a0a0a] hover:border-[#0a0a0a] hover:bg-zinc-50 transition-colors"
           >
             Create an Account
