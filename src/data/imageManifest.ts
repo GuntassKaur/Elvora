@@ -1,6 +1,6 @@
 // ============================================================
-// ELVORA — Image Manifest v6 (FINAL STABILIZATION)
-// ONE product = ONE image. No fake galleries. No mixing.
+// ELVORA — Image Manifest v7 (FINAL REDESIGN)
+// ONE product = ONE image. No text placeholders. Real images.
 // ============================================================
 
 export const imageManifest: Record<string, string[]> = {
@@ -26,24 +26,21 @@ export const imageManifest: Record<string, string[]> = {
   "elv-10": ["/images/catalog/elv_10_mens_utility_jacket.jpg"],
   "elv-12": ["/images/catalog/elv_12_mens_denim_jacket.jpg"],
 
-  // ── MEN'S KNITWEAR ──────────────────────────────────────
-  "elv-11": ["/images/catalog/elv_11_mens_polo.jpg"],
+  // ── ACCESSORIES (Real Unsplash Product Photography) ────────
+  "elv-13": ["https://images.unsplash.com/photo-1520699049698-b2fa6c519447?auto=format&fit=crop&w=1200&q=80"], // Scarf
+  "elv-14": ["https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=80"], // Tote Bag
+  "elv-15": ["https://images.unsplash.com/photo-1599643478524-41bec2962a69?auto=format&fit=crop&w=1200&q=80"], // Silver Chain
+  "elv-16": ["https://images.unsplash.com/photo-1521369909029-2afed882ba54?auto=format&fit=crop&w=1200&q=80"], // Fedora
+  "elv-17": ["https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=1200&q=80"], // Beanie
+  "elv-18": ["https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=1200&q=80"], // Belt
 
-  // ── ACCESSORIES ──────────────────────────────────────────
-  "elv-14": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Structured\nLeather\nTote&font=playfair-display"],
-  "elv-13": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Wool\nBlend\nScarf&font=playfair-display"],
-  "elv-15": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Sterling\nSilver\nChain&font=playfair-display"],
-  "elv-16": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Wool\nFelt\nFedora&font=playfair-display"],
-  "elv-17": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Ribbed\nKnit\nBeanie&font=playfair-display"],
-  "elv-18": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Full-Grain\nLeather\nBelt&font=playfair-display"],
-
-  // ── FOOTWEAR ─────────────────────────────────────────────
-  "elv-19": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Leather\nChelsea\nBoots&font=playfair-display"],
-  "elv-20": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Suede\nPenny\nLoafer&font=playfair-display"],
-  "elv-21": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Clean\nCourt\nSneaker&font=playfair-display"],
-  "elv-22": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Cap-Toe\nDerby\nShoe&font=playfair-display"],
-  "elv-23": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Zip-Up\nAnkle\nBoot&font=playfair-display"],
-  "elv-24": ["https://placehold.co/1200x1600/111111/FAF9F6?text=Leather\nSlide\nSandals&font=playfair-display"],
+  // ── FOOTWEAR (Real Unsplash Product Photography) ───────────
+  "elv-19": ["https://images.unsplash.com/photo-1603483980313-176c7c64c740?auto=format&fit=crop&w=1200&q=80"], // Chelsea Boots
+  "elv-20": ["https://images.unsplash.com/photo-1534260933201-acfaee3017ee?auto=format&fit=crop&w=1200&q=80"], // Loafer
+  "elv-21": ["https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1200&q=80"], // Sneaker
+  "elv-22": ["https://images.unsplash.com/photo-1614252369475-531eba835eb1?auto=format&fit=crop&w=1200&q=80"], // Derby
+  "elv-23": ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=1200&q=80"], // Ankle Boot
+  "elv-24": ["https://images.unsplash.com/photo-1562183241-b937e95585b6?auto=format&fit=crop&w=1200&q=80"], // Sandals
 
   // ── HERO & EDITORIAL ─────────────────────────────────────
   "hero-1": ["https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920"],
