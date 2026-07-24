@@ -88,10 +88,10 @@ export const imageManifest: Record<string, string[]> = {
   ],
   // elv-10: Suede-Look Utility Jacket — men's field/utility jacket photos
   "elv-10": [
-    "https://images.pexels.com/photos/1462637/pexels-photo-1462637.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/2220316/pexels-photo-2220316.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/1813947/pexels-photo-1813947.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/2897531/pexels-photo-2897531.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1300550/pexels-photo-1300550.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
   // elv-12: Classic Denim Overshirt Jacket — men's denim jacket photos
   "elv-12": [
@@ -132,10 +132,10 @@ export const imageManifest: Record<string, string[]> = {
   ],
   // elv-16: Wool Felt Fedora Hat — hat / fedora photos ONLY
   "elv-16": [
-    "https://images.pexels.com/photos/1071251/pexels-photo-1071251.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/975250/pexels-photo-975250.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/352586/pexels-photo-352586.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/982585/pexels-photo-982585.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/3760856/pexels-photo-3760856.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1191536/pexels-photo-1191536.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
   // elv-17: Ribbed Knit Beanie — beanie / winter hat photos ONLY
   "elv-17": [
