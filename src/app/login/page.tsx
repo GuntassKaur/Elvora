@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight, Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -18,20 +18,26 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-function RevealText({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
-  return (
-    <div ref={ref} className={`overflow-hidden ${className || ""}`}>
-      <motion.div
-        initial={{ y: "100%" }}
-        animate={inView ? { y: 0 } : { y: "100%" }}
-        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay }}
-      >
-        {children}
-      </motion.div>
-    </div>
-  );
+// Map Supabase error messages to user-friendly equivalents
+function mapAuthError(message: string): string {
+  const lower = message.toLowerCase();
+  if (lower.includes("invalid login credentials") || lower.includes("invalid credentials")) {
+    return "Incorrect email or password. Please try again.";
+  }
+  if (lower.includes("email not confirmed")) {
+    return "Please verify your email address before signing in. Check your inbox for a confirmation link.";
+  }
+  if (lower.includes("user not found") || lower.includes("no user found")) {
+    return "No account found with this email. Please sign up first.";
+  }
+  if (lower.includes("rate limit") || lower.includes("too many")) {
+    return "Too many login attempts. Please wait a moment and try again.";
+  }
+  if (lower.includes("network") || lower.includes("fetch")) {
+    return "Network error. Please check your connection and try again.";
+  }
+  // Show the real Supabase error for all other cases
+  return message;
 }
 
 export default function LoginPage() {
@@ -48,12 +54,16 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
     setAuthError("");
+
+    const normalizedEmail = data.email.trim().toLowerCase();
+
     const { error } = await supabase.auth.signInWithPassword({
-      email: data.email,
+      email: normalizedEmail,
       password: data.password,
     });
+
     if (error) {
-      setAuthError(error.message);
+      setAuthError(mapAuthError(error.message));
       setIsSubmitting(false);
     } else {
       router.push("/profile");
@@ -66,14 +76,14 @@ export default function LoginPage() {
       {/* Left: Editorial Image */}
       <div className="hidden lg:block relative overflow-hidden">
         <Image
-          src="https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=1200"
+          src="https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1200"
           alt="ELVORA Login"
           fill
           priority
-          className="object-cover object-top"
+          className="object-cover object-[center_30%]"
           sizes="50vw"
         />
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/30" />
         <div className="absolute bottom-12 left-12 right-12">
           <p className="font-serif text-4xl text-white leading-tight italic font-light">
             &ldquo;Wear Confidence.&rdquo;
@@ -89,45 +99,44 @@ export default function LoginPage() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="w-full max-w-sm"
         >
           {/* Logo */}
-          <Link href="/" className="block mb-12">
+          <Link href="/" className="block mb-10">
             <span className="font-serif text-2xl tracking-[0.45em] uppercase text-[#0a0a0a]">
               ELVORA
             </span>
           </Link>
 
           {/* Header */}
-          <div className="mb-10">
-            <RevealText className="font-serif text-4xl sm:text-5xl text-[#0a0a0a] leading-tight">
-              Welcome
-            </RevealText>
-            <RevealText className="font-serif text-4xl sm:text-5xl text-zinc-400 italic font-light leading-tight" delay={0.1}>
-              Back.
-            </RevealText>
-            <p className="text-[9px] uppercase tracking-[0.3em] font-semibold text-zinc-400 mt-5">
+          <div className="mb-8">
+            <h1 className="font-serif text-4xl sm:text-5xl text-[#0a0a0a] leading-tight">
+              Welcome Back.
+            </h1>
+            <p className="text-[9px] uppercase tracking-[0.3em] font-semibold text-zinc-400 mt-4">
               Sign in to your ELVORA account
             </p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+            {/* Error Banner */}
             {authError && (
-              <div className="flex items-start gap-3 p-4 bg-red-50 border-l-2 border-red-400">
+              <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-sm">
                 <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-red-700 leading-relaxed">{authError}</p>
               </div>
             )}
 
             {/* Email */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="block text-[9px] uppercase tracking-[0.3em] font-bold text-zinc-500">
                 Email Address
               </label>
               <input
                 {...register("email")}
                 type="email"
+                autoComplete="email"
                 className="w-full bg-transparent border-b border-zinc-300 py-3 text-sm text-[#0a0a0a] placeholder:text-zinc-300 focus:outline-none focus:border-[#0a0a0a] transition-colors"
                 placeholder="you@example.com"
               />
@@ -139,7 +148,7 @@ export default function LoginPage() {
             </div>
 
             {/* Password */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="block text-[9px] uppercase tracking-[0.3em] font-bold text-zinc-500">
                 Password
               </label>
@@ -147,6 +156,7 @@ export default function LoginPage() {
                 <input
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
                   className="w-full bg-transparent border-b border-zinc-300 py-3 text-sm text-[#0a0a0a] placeholder:text-zinc-300 focus:outline-none focus:border-[#0a0a0a] transition-colors pr-8"
                   placeholder="••••••••"
                 />
@@ -167,11 +177,11 @@ export default function LoginPage() {
             </div>
 
             {/* Submit */}
-            <div className="pt-4">
+            <div className="pt-3">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#0a0a0a] text-[#faf9f6] py-4 flex justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                className="w-full bg-[#0a0a0a] text-[#faf9f6] py-4 flex justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Signing In...</>
@@ -183,7 +193,7 @@ export default function LoginPage() {
           </form>
 
           {/* Divider */}
-          <div className="my-8 flex items-center gap-4">
+          <div className="my-7 flex items-center gap-4">
             <div className="flex-1 h-[1px] bg-zinc-200" />
             <span className="text-[9px] uppercase tracking-[0.3em] text-zinc-400 font-medium">Or</span>
             <div className="flex-1 h-[1px] bg-zinc-200" />
@@ -192,7 +202,7 @@ export default function LoginPage() {
           {/* Sign Up Link */}
           <Link
             href="/signup"
-            className="w-full border border-zinc-300 py-4 flex justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#0a0a0a] hover:border-[#0a0a0a] transition-colors"
+            className="w-full border border-zinc-300 py-4 flex justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#0a0a0a] hover:border-[#0a0a0a] hover:bg-zinc-50 transition-colors"
           >
             Create an Account
           </Link>

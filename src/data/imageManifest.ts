@@ -48,10 +48,10 @@ export const imageManifest: Record<string, string[]> = {
     "https://images.pexels.com/photos/6769233/pexels-photo-6769233.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
   "elv-06": [ // Relaxed Silk-Touch Shirt
-    "https://images.pexels.com/photos/6764523/pexels-photo-6764523.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/6764533/pexels-photo-6764533.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/6764543/pexels-photo-6764543.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/6764550/pexels-photo-6764550.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/3622608/pexels-photo-3622608.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/3622611/pexels-photo-3622611.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
 
   // ── MEN'S TAILORING ──
@@ -120,10 +120,10 @@ export const imageManifest: Record<string, string[]> = {
     "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
   "elv-17": [ // Ribbed Knit Beanie
-    "https://images.pexels.com/photos/6764800/pexels-photo-6764800.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/6764803/pexels-photo-6764803.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/6764806/pexels-photo-6764806.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/6764809/pexels-photo-6764809.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1021694/pexels-photo-1021694.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1024311/pexels-photo-1024311.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/6764787/pexels-photo-6764787.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
   "elv-18": [ // Full-Grain Leather Belt
     "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -159,9 +159,9 @@ export const imageManifest: Record<string, string[]> = {
   ],
   "elv-23": [ // Stretch Knit Ankle Boot
     "https://images.pexels.com/photos/336372/pexels-photo-336372.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    "https://images.pexels.com/photos/2562992/pexels-photo-2562992.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/1308324/pexels-photo-1308324.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "https://images.pexels.com/photos/1456706/pexels-photo-1456706.jpeg?auto=compress&cs=tinysrgb&w=1200",
   ],
   "elv-24": [ // Double-Strap Leather Slides
     "https://images.pexels.com/photos/1456706/pexels-photo-1456706.jpeg?auto=compress&cs=tinysrgb&w=1200",
